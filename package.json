@@ -2,9 +2,12 @@
     "name": "rose-game-web-ui",
     "version": "1.0.0",
     "description": "ROSE game web UI client",
+    "license": "LGPL-2.1-or-later",
     "main": "server.js",
     "scripts": {
-        "start": "node server.js"
+        "start": "node server.js",
+        "lint": "eslint server.js public/",
+        "lint:fix": "eslint server.js public/ --fix"
     },
     "dependencies": {
         "argparse": "^2.0.1",
@@ -14,5 +17,11 @@
         "https": "^1.0.0",
         "ws": "^8.16.0"
     },
-    "license": "LGPL-2.1-or-later"
+    "devDependencies": {
+        "eslint": "^8.56.0",
+        "eslint-config-standard": "^17.1.0",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^6.1.1"
+    }
 }
