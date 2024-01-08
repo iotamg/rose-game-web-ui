@@ -119,8 +119,8 @@ function main () {
   })
   parser.add_argument('-c', '--cert', { help: 'Path to SSL certificate file' })
   parser.add_argument('-k', '--key', { help: 'Path to SSL key file' })
-  parser.add_argument('-hp', '--httpproxy', { help: 'HTTP proxy target URL', default: 'http://127.0.0.1:8090' })
-  parser.add_argument('-wp', '--wsproxy', { help: 'WebSocket proxy target URL', default: 'ws://127.0.0.1:8090' })
+  parser.add_argument('-hp', '--httpproxy', { help: 'HTTP proxy target URL', default: 'http://127.0.0.1:8880' })
+  parser.add_argument('-wp', '--wsproxy', { help: 'WebSocket proxy target URL', default: 'ws://127.0.0.1:8880' })
   parser.add_argument('-p', '--port', { help: 'Server port', type: 'int', default: 8080 })
   const args = parser.parse_args()
 
