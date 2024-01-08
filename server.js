@@ -85,13 +85,27 @@ function createServer(app, certPath, keyPath, wsProxyTarget) {
 }
 
 /**
- * Start the server on a specified port.
+ * Start the server on a specified port and log the configuration details.
  * @param {http.Server | https.Server} server - The HTTP/HTTPS server to start.
- * @param {number} port - The port number on which to start the server.
+ * @param {Object} args - The command-line arguments.
  */
-function startServer(server, port) {
-  server.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+function startServer(server, args) {
+  server.listen(args.port, () => {
+    console.log(`Server running on port ${args.port}`);
+    console.log(`HTTP Proxy target URL: ${args.httpproxy}`);
+    console.log(`WebSocket Proxy target URL: ${args.wsproxy}`);
+
+    if (args.cert && args.key) {
+      console.log(`SSL Certificate: ${args.cert}`);
+      console.log(`SSL Key: ${args.key}`);
+      console.log('Running in HTTPS mode');
+
+      console.log(`Lissten https://127.0.0.1:${args.port}`);
+    } else {
+      console.log('Running in HTTP mode');
+
+      console.log(`Lissten http://127.0.0.1:${args.port}`);
+    }
   });
 }
 
@@ -113,7 +127,7 @@ function main() {
   // Create and start the server
   const app = createExpressApp(args.httpproxy);
   const server = createServer(app, args.cert, args.key, args.wsproxy);
-  startServer(server, args.port);
+  startServer(server, args);
 }
 
 // Call the main method to start the server

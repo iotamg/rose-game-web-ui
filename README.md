@@ -35,4 +35,4 @@ Run locally:
 npm start
 ```
 
-Browse to http://127.0.0.1:8880 to run the game.
+Browse to http://127.0.0.1:8080 to run the game.
