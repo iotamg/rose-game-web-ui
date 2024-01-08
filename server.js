@@ -99,8 +99,12 @@ function startServer(server, args) {
       console.log(`SSL Certificate: ${args.cert}`);
       console.log(`SSL Key: ${args.key}`);
       console.log('Running in HTTPS mode');
+
+      console.log(`Lissten https://127.0.0.1:${args.port}`);
     } else {
       console.log('Running in HTTP mode');
+
+      console.log(`Lissten http://127.0.0.1:${args.port}`);
     }
   });
 }
