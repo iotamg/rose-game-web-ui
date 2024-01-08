@@ -31,7 +31,7 @@ class App {
         this.cars = new Cars(imageLoader);
         this.finish_line = new FinishLine(imageLoader);
         this.infoUpdater = new Information();
-        this.sound = new Sound("res/soundtrack/Nyan_Cat.ogg");
+        this.sound = new Sound("assets/soundtrack/Nyan_Cat.ogg");
     }
 
     onmessage(m) {
@@ -126,7 +126,7 @@ class Controller {
     run() {
         this.disable();
 
-        fetch("admin?running=1", {method: 'POST'})
+        fetch("api/admin?running=1", {method: 'POST'})
             .then(() => {
                 console.log("starting");
             })
@@ -138,7 +138,7 @@ class Controller {
     stop() {
         this.disable();
 
-        fetch("admin?running=0", {method: 'POST'})
+        fetch("api/admin?running=0", {method: 'POST'})
             .then(() => {
                 console.log("stopping");
             })
@@ -150,7 +150,7 @@ class Controller {
     reset() {
         this.disable();
 
-        fetch("admin?reset=1", {method: 'POST'})
+        fetch("api/admin?reset=1", {method: 'POST'})
             .then(() => {
                 console.log("reset");
             })
@@ -255,7 +255,7 @@ class Rate {
     post(value) {
         this.disable();
 
-        fetch(`admin?rate=${value}`, {method: 'POST'})
+        fetch(`api/admin?rate=${value}`, {method: 'POST'})
             .then(() => {
                 this.update({rate: value});
             })
@@ -301,7 +301,7 @@ class Obstacles {
         const obstacleNames = ["barrier", "bike", "crack", "penguin", "trash", "water"];
 
         obstacleNames.forEach(name => {
-            loader.load(`res/obstacles/${name}.png`, (img) => {
+            loader.load(`assets/obstacles/${name}.png`, (img) => {
                 this.textures[name] = img;
             });
         });
@@ -327,7 +327,7 @@ class Cars {
         this.textures = [null, null, null, null];
 
         for (let i = 0; i < 4; i++) {
-            loader.load(`res/cars/car${i + 1}.png`, (img) => {
+            loader.load(`assets/cars/car${i + 1}.png`, (img) => {
                 this.textures[i] = img;
             });
         }
@@ -363,7 +363,7 @@ class FinishLine {
         this.texture = null;
         this.timeleft = null;
 
-        loader.load("res/end/final_flag.png", (img) => {
+        loader.load("assets/end/final_flag.png", (img) => {
             this.texture = img;
         });
     }
@@ -390,13 +390,13 @@ class Track {
         this.track = null;
         this.textures = [null, null, null];
 
-        loader.load("res/bg/bg_1.png", (img) => {
+        loader.load("assets/bg/bg_1.png", (img) => {
             this.textures[0] = img;
         });
-        loader.load("res/bg/bg_2.png", (img) => {
+        loader.load("assets/bg/bg_2.png", (img) => {
             this.textures[1] = img;
         });
-        loader.load("res/bg/bg_3.png", (img) => {
+        loader.load("assets/bg/bg_3.png", (img) => {
             this.textures[2] = img;
         });
     }

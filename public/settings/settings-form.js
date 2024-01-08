@@ -27,7 +27,7 @@ class SettingsForm extends HTMLElement {
 
     async loadDrivers() {
         try {
-            const response = await fetch('/admin', { method: 'POST' });
+            const response = await fetch('/api/admin', { method: 'POST' });
             const data = await response.json();
 
             if (data.drivers && data.drivers.length > 0) {
@@ -49,7 +49,7 @@ class SettingsForm extends HTMLElement {
         params.append('drivers', `${driver1},${driver2}`);
 
         try {
-            const response = await fetch(`/admin?${params}`, { method: 'POST' });
+            const response = await fetch(`/api/admin?${params}`, { method: 'POST' });
 
             if (response.ok) {
                 window.location.href = "/index.html";
