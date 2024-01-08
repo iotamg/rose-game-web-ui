@@ -1,5 +1,5 @@
-# Use the official Node.js 14 image as a parent image
-FROM node:14
+# Use the official Node.js 20 image as a parent image
+FROM registry.access.redhat.com/ubi9/nodejs-20
 
 # Set the working directory
 WORKDIR /usr/src/app
@@ -8,20 +8,22 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies
+USER 0
 RUN npm install
 
 # Copy the rest of your app's source code
 COPY . .
 
+# Set user
+USER 1001
+
 # Default values for environment variables
-ENV CERT_PATH ""
-ENV KEY_PATH ""
-ENV HTTP_PROXY http://localhost:8090
-ENV WS_PROXY http://localhost:8090
+ENV HTTP_PROXY http://localhost:8880
+ENV WS_PROXY http://localhost:8880
 ENV PORT 8080
 
 # Inform Docker that the container listens on port 3000
 EXPOSE 8080
 
 # Define the command to run your app using CMD which defines your runtime
-CMD ["sh", "-c", "node server.js --cert ${CERT_PATH} --key ${KEY_PATH} --httpproxy ${HTTP_PROXY} --wsproxy ${WS_PROXY} --port ${PORT}"]
+CMD ["sh", "-c", "node server.js --httpproxy ${HTTP_PROXY} --wsproxy ${WS_PROXY} --port ${PORT}"]
