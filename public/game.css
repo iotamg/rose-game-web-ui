@@ -78,7 +78,7 @@ body {
 }
 
 #players {
-    background-image: url('../res/dashboard/dashboard.png');
+    background-image: url('../assets/dashboard/dashboard.png');
     width: 910px;
     height: 150px;
     font-weight: bold;

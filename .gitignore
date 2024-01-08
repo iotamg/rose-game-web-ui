@@ -1,0 +1,26 @@
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+Thumbs.db
+
+# IDE
+/.idea
+/*.iml
+/*.ipr
+/*.iws
+
+# OS generated files
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
