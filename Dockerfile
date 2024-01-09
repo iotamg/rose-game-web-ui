@@ -26,4 +26,4 @@ ENV PORT 8080
 EXPOSE 8080
 
 # Define the command to run your app using CMD which defines your runtime
-CMD ["sh", "-c", "node server.js --httpproxy ${HTTP_PROXY} --wsproxy ${WS_PROXY} --port ${PORT}"]
+CMD npm start -- --httpproxy ${HTTP_PROXY} --wsproxy ${WS_PROXY} --port ${PORT}
