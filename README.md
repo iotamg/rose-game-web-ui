@@ -22,7 +22,7 @@ Component | Reference |
 ----------|-----------|
 Game engine | https://github.com/RedHat-Israel/rose-game-engine |
 Game web based user interface | https://github.com/RedHat-Israel/rose-game-web-ui |
-Game car driving module | https://github.com/RedHat-Israel/rose-game-ai |
+Self driving car module | https://github.com/RedHat-Israel/rose-game-ai |
 
 ## Running the web based graphical user interface loally
 
