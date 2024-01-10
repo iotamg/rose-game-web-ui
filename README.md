@@ -1,38 +1,63 @@
 # rose-game-web-ui
-Web based user interface for the ROSE game.
+[ROSE game](https://github.com/RedHat-Israel/ROSE) web based graphical user interface.
+
+This component implement a web based graphical user interface for the ROSE game.
+
+<p align="center">
+  <img src="web-ui.png" alt="rose game components diagram" width="400"/>
+</p>
 
 ROSE project: https://github.com/RedHat-Israel/ROSE
 
-Run the rose reference driver:
+## Requirements
 
-``` bash
-# Get help
-podman run --rm --network host -it quay.io/rose/rose-game-ai-reference:latest --help
+ Requires | Version | |
+----------|---------| ---- |
+ Podman (or Docker) | >= 4.8 | For running containerized |
+ Node   | >= 20  | For running the code loally |
 
-# Run the driver on localhost port 8082 (default port in 8081)
-podman run --rm --network host -it quay.io/rose/rose-game-ai-reference:latest --port 8082
-```
+## ROSE game components
 
-Run the rose game engine:
+Component | Reference |
+----------|-----------|
+Game engine | https://github.com/RedHat-Israel/rose-game-engine |
+Game web based user interface | https://github.com/RedHat-Israel/rose-game-web-ui |
+Game car driving module | https://github.com/RedHat-Israel/rose-game-ai |
 
-``` bash
-# Start the ROSE game game engine, and connect to the Go driver
-podman run --rm \
-  --network host \
-  -it quay.io/rose/rose-game-engine:latest \
-  --drivers http://127.0.0.1:8082
-```
+## Running the web based graphical user interface loally
 
-Run the rose game web UI:
+Clone this repository, and make sure you have a game engine running.
+
+Run the user interface:
 
 ```bash
+# Get help
+npm start -- --help
+
+# Run the server (connect to a game engine running on http://127.0.0.1:8880)
+npm start -- -hp http://127.0.0.1:8880 -wp ws://127.0.0.1:8880 -p 8080
+```
+
+## Running ROSE game components containerized
+
+### Running the game engine ( on http://127.0.0.1:8880 )
+
+``` bash
+podman run --rm --network host -it quay.io/rose/rose-game-engine:latest
+```
+
+### Running the game web based user interface ( on http://127.0.0.1:8080 )
+
+``` bash
 podman run --rm --network host -it quay.io/rose/rose-game-web-ui:latest
 ```
 
-Run locally:
+### Running your self driving module, requires a local `driver.py` file with your driving module. ( on http://127.0.0.1:8081 )
 
-```bash
-npm start
+``` bash
+# NOTE: will mount mydriver.py from local directory into the container file system
+podman run --rm --network host -it \
+  -v $(pwd)/mydriver.py:/mydriver.py:z \
+  -e DRIVER /mydriver.py \
+  quay.io/rose/rose-game-ai:latest
 ```
-
-Browse to http://127.0.0.1:8080 to run the game.
