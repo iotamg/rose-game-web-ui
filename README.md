@@ -58,7 +58,7 @@ podman run --rm --network host -it quay.io/rose/rose-game-web-ui:latest
 ``` bash
 # NOTE: will mount mydriver.py from local directory into the container file system
 podman run --rm --network host -it \
-  -v $(pwd)/mydriver.py:/mydriver.py:z \
-  -e DRIVER /mydriver.py \
+  -v $(pwd)/:/driver:z \
+  -e DRIVER=/driver/mydriver.py \
   quay.io/rose/rose-game-ai:latest
 ```
