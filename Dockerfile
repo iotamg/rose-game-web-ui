@@ -10,7 +10,6 @@ COPY package*.json ./
 # Install dependencies
 USER 0
 RUN npm install
-RUN chown -R 1001:0 "/opt/app-root/src/.npm"
 
 # Copy the rest of your app's source code
 COPY . .
