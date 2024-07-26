@@ -32,6 +32,9 @@ Clone this repository, and make sure you have a game engine running.
 Run the user interface:
 
 ```bash
+# Install requirments
+npm install
+
 # Get help
 npm start -- --help
 
