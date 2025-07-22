@@ -1,3 +1,5 @@
+let player1score = 0
+let player2score = 0
 class App {
   client = null
   controller = null
@@ -9,6 +11,7 @@ class App {
   cars = null
   finish_line = null
   infoUpdater = null
+  debugUpdater = null
 
   ready () {
     // Start loading game images.
@@ -30,6 +33,9 @@ class App {
     this.cars = new Cars(imageLoader)
     this.finish_line = new FinishLine(imageLoader)
     this.infoUpdater = new Information()
+    console.log("Finished updating info")
+    this.debugUpdater = new Debuging()
+    console.log("Finished updating debug")
     this.sound = new Sound('assets/soundtrack/Nyan_Cat.ogg')
   }
 
@@ -51,6 +57,7 @@ class App {
     this.cars.update(state)
     this.finish_line.update(state)
     this.infoUpdater.update(state)
+    this.debugUpdater.update(state)
 
     // Draw
     this.dashboard.draw(this.context)
@@ -120,6 +127,25 @@ class Controller {
         infoPanel.classList.add('hidden')
       }
     })
+    document.getElementById('debug-btn').addEventListener('click', function (e) {
+      e.preventDefault() // Prevent default behavior of the anchor
+
+      const debugPanel = document.getElementById('debug-panel')
+
+      if (debugPanel.classList.contains('hidden')) {
+        debugPanel.classList.remove('hidden')
+      } else {
+        debugPanel.classList.add('hidden')
+      }
+    })
+    document.getElementById('debug-play-btn').addEventListener('click', event => {
+      event.preventDefault()
+      this.run()
+    })
+    document.getElementById('debug-pause-btn').addEventListener('click', event => {
+      event.preventDefault()
+      this.stop()
+    })
   }
 
   run () {
@@ -164,11 +190,13 @@ class Controller {
       document.querySelector('#stop').setAttribute('disabled', 'disabled')
     } else if (state.started) {
       document.querySelector('#info').textContent = ('')
+      document.querySelector('#debug').textContent = ('')
       document.querySelector('#run').setAttribute('disabled', 'disabled')
       document.querySelector('#stop').removeAttribute('disabled')
       document.querySelector('#reset').setAttribute('disabled', 'disabled')
     } else {
       document.querySelector('#info').textContent = ('')
+      document.querySelector('#debug').textContent = ('')
       document.querySelector('#run').removeAttribute('disabled')
       document.querySelector('#stop').setAttribute('disabled', 'disabled')
       document.querySelector('#reset').removeAttribute('disabled')
@@ -282,10 +310,12 @@ class Dashboard {
       if (player.lane === 0) {
         document.querySelector('#left.player .name').textContent = player.name
         document.querySelector('#left.player .score').textContent = player.score
+        player1score=player.score
       }
       if (player.lane === 1) {
         document.querySelector('#right.player .name').textContent = player.name
         document.querySelector('#right.player .score').textContent = player.score
+        player2score=player.score
       }
     }
   }
@@ -458,6 +488,36 @@ class Information {
     })
 
     this.infoElement.innerHTML = infoText
+  }
+}
+class Debuging {
+  constructor () {
+    this.debugElement = document.getElementById('debug-text')
+  }
+
+  update (state) {
+    if (!state.players) {
+      return
+    }
+
+    let debugText = ''
+
+    if (state.players.length === 0) {
+      debugText += 'No players connected.<br/>'
+    }
+
+    state.players.forEach(player => {
+      const formattedResponseTime = (player.response_time * 1000.0).toFixed(2)
+      debugText += `Name: ${player.name}<br/>`
+      debugText += `Response time: ${formattedResponseTime}ms<br/>`
+      debugText += 'Hello World'
+      debugText += player1score
+      debugText += document.querySelector('#right.player .score').textContent
+      
+      debugText += '<br/><br/>'
+    })
+
+    this.debugElement.innerHTML = debugText
   }
 }
 
