@@ -1,5 +1,15 @@
 let player1score = 0
 let player2score = 0
+let aotoreset = false
+function aotoReset(){
+    if document.getElementById("aotoReset").checked==true{
+        document.getElementById("aotoReset").check=false
+        aotoreset=false
+        return
+    }
+    document.getElementById("aotoReset").check=true
+    aotoreset=true
+}
 class App {
   client = null
   controller = null
@@ -131,7 +141,7 @@ class Controller {
       e.preventDefault() // Prevent default behavior of the anchor
 
       const debugPanel = document.getElementById('debug-panel')
-
+     
       if (debugPanel.classList.contains('hidden')) {
         debugPanel.classList.remove('hidden')
       } else {
@@ -204,6 +214,7 @@ class Controller {
 
     if (state.timeleft === 0) {
       document.querySelector('#run').setAttribute('disabled', 'disabled')
+      this.reset()
     }
   }
 
