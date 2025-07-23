@@ -48,10 +48,7 @@ class App {
 
     // Update
     this.debugUpdater.update(state)
-    if(this.debugUpdater.offsetScoresCheck(state)){
-      this.controller.stop()
-    }
-    if(this.debugUpdater.didObstacle(state)){
+    if(this.debugUpdater.stop_for_dbg(state)){
       this.controller.stop()
     }
     this.controller.update(state)
@@ -532,9 +529,42 @@ class Debuging {
 
     this.debugElement.innerHTML = debugText
   }
+  stop_for_dbg(state){
+      if(document.getElementById('offset-scores-box').checked==true && this.offsetScoresCheck(state)){
+        return true
+
+      }
+      if(document.getElementById('collision-box').checked==true && collisionCheck(state)){
+        return true
+      }
+      if(document.getElementById('missed-penguin-box').checked==true &&missedPenguin(state)){
+        return true
+      }
+      if(document.getElementById('did-obstacle-box').checked==true && didObstacle(state)){
+        return true
+      }
+  }
+  missedPenguin(state){
+  this.players=state.players
+  for (const obstacle of state.track) {
+    if (obstacle.name=="penguin"){
+        if(obstacle.y==this.players[0].y){
+        return true
+        }
+    }
+  }
+  return false
+  }
+  collisionCheck(state){
+    this.players=state.players
+    if(this.players[0].x==this.players[1].x && this.players[0].y==this.players[1].y){
+    return true
+    }
+    return false
+  }
   offsetScoresCheck (state){
-    if (document.getElementById('offset-scores-box').checked==true && state.players.length > 1 && (state.players[0].score - state.players[1].score) != this.offset){
-        this.offset = state.players[0].score - state.players[1].score
+    if ( (player1score - player2score) != this.offset){
+        this.offset = player1score - player2score
         return true
       }
     return false
