@@ -1,6 +1,3 @@
-let player1score = 0
-let player2score = 0
-
 class App {
   client = null
   controller = null
@@ -50,9 +47,12 @@ class App {
     const state = msg.payload
 
     // Update
-    
+    console.log(state)
     this.debugUpdater.update(state)
     if(this.debugUpdater.offsetScoresCheck(state)){
+      this.controller.stop()
+    }
+    if(this.debugUpdater.didObstacle(state)){
       this.controller.stop()
     }
     this.controller.update(state)
@@ -333,15 +333,12 @@ class Dashboard {
       if (player.lane === 0) {
         document.querySelector('#left.player .name').textContent = player.name
         document.querySelector('#left.player .score').textContent = player.score
-        player1score=player.score
       }
       if (player.lane === 1) {
         document.querySelector('#right.player .name').textContent = player.name
         document.querySelector('#right.player .score').textContent = player.score
-        player2score=player.score
       }
     }
-    if (this.players.length == 1){player1score = player2score}
   }
 }
 
@@ -518,6 +515,7 @@ class Debuging {
   constructor () {
     this.debugElement = document.getElementById('debug-text')
     this.offset = 0
+    this.pastScores = [0,0]
   }
   
 
@@ -532,16 +530,26 @@ class Debuging {
     if (state.players.length === 0) {
       debugText += 'No players connected.<br/>'
     }
-    //debugText += '<br/><br/>'
 
     this.debugElement.innerHTML = debugText
   }
   offsetScoresCheck (state){
-    if (document.getElementById('offset-scores-box').checked==true && (player1score - player2score) != this.offset){
-        this.offset = player1score - player2score
+    if (document.getElementById('offset-scores-box').checked==true && state.players.length > 1 && (state.players[0].score - state.players[1].score) != this.offset){
+        this.offset = state.players[0].score - state.players[1].score
         return true
       }
     return false
+  }
+  didObstacle (state){ /*have runned into obstacle?*/
+    if (document.getElementById('did-obstacle-box').checked){
+      for (let i = 0; i < state.players.length; i++) {
+        if (this.pastScores[i] - 10 == state.players[i].score){
+          this.pastScores[i] = state.players[i].score
+          return true
+        }
+        this.pastScores[i] = state.players[i].score
+      }}
+      return false
   }
 
 }
