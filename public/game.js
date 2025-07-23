@@ -1,15 +1,15 @@
 let player1score = 0
 let player2score = 0
 let aotoreset = false
-function aotoReset(){
-    if document.getElementById("aotoReset").checked==true{
-        document.getElementById("aotoReset").check=false
-        aotoreset=false
-        return
-    }
-    document.getElementById("aotoReset").check=true
-    aotoreset=true
-}
+// function aotoReset(){
+//     if (document.getElementById("aotoReset").checked==true){
+//         document.getElementById("aotoReset").check=false
+//         aotoreset=false
+//         return
+//     }
+//     document.getElementById("aotoReset").check=true
+//     aotoreset=true
+// }
 class App {
   client = null
   controller = null
@@ -43,9 +43,7 @@ class App {
     this.cars = new Cars(imageLoader)
     this.finish_line = new FinishLine(imageLoader)
     this.infoUpdater = new Information()
-    console.log("Finished updating info")
     this.debugUpdater = new Debuging()
-    console.log("Finished updating debug")
     this.sound = new Sound('assets/soundtrack/Nyan_Cat.ogg')
   }
 
