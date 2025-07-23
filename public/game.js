@@ -1,15 +1,6 @@
 let player1score = 0
 let player2score = 0
-let aotoreset = false
-// function aotoReset(){
-//     if (document.getElementById("aotoReset").checked==true){
-//         document.getElementById("aotoReset").check=false
-//         aotoreset=false
-//         return
-//     }
-//     document.getElementById("aotoReset").check=true
-//     aotoreset=true
-// }
+let autoreset = false
 class App {
   client = null
   controller = null
@@ -43,7 +34,9 @@ class App {
     this.cars = new Cars(imageLoader)
     this.finish_line = new FinishLine(imageLoader)
     this.infoUpdater = new Information()
+    console.log("Finished updating info")
     this.debugUpdater = new Debuging()
+    console.log("Finished updating debug")
     this.sound = new Sound('assets/soundtrack/Nyan_Cat.ogg')
   }
 
@@ -57,6 +50,7 @@ class App {
     const state = msg.payload
 
     // Update
+    this.debugUpdater.update(state)
     this.controller.update(state)
     this.rate.update(state)
     this.dashboard.update(state)
@@ -65,7 +59,7 @@ class App {
     this.cars.update(state)
     this.finish_line.update(state)
     this.infoUpdater.update(state)
-    this.debugUpdater.update(state)
+
 
     // Draw
     this.dashboard.draw(this.context)
@@ -202,12 +196,16 @@ class Controller {
       document.querySelector('#run').setAttribute('disabled', 'disabled')
       document.querySelector('#stop').removeAttribute('disabled')
       document.querySelector('#reset').setAttribute('disabled', 'disabled')
+
     } else {
       document.querySelector('#info').textContent = ('')
       document.querySelector('#debug').textContent = ('')
       document.querySelector('#run').removeAttribute('disabled')
       document.querySelector('#stop').setAttribute('disabled', 'disabled')
       document.querySelector('#reset').removeAttribute('disabled')
+      if (autoreset){
+      this.reset()
+      }
     }
 
     if (state.timeleft === 0) {
@@ -507,6 +505,9 @@ class Debuging {
   update (state) {
     if (!state.players) {
       return
+    }
+    if(getElementById('aotoReset').checked==true){
+    autreseteset=true
     }
 
     let debugText = ''
