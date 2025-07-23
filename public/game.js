@@ -532,15 +532,7 @@ class Debuging {
     if (state.players.length === 0) {
       debugText += 'No players connected.<br/>'
     }
-
-    state.players.forEach(player => {
-      const formattedResponseTime = (player.response_time * 1000.0).toFixed(2)
-      debugText += player1score
-      debugText += document.querySelector('#right.player .score').textContent
-      
-      debugText += '<br/><br/>'
-      debugText += document.getElementById('offset-scores-box').value
-    })
+    //debugText += '<br/><br/>'
 
     this.debugElement.innerHTML = debugText
   }
