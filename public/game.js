@@ -16,7 +16,7 @@ class App {
     document.querySelector('#left.player .name').textContent = 'Loading ...'
 
     this.controller = new Controller()
-    this.rate = new Rate([0.5, 1.0, 2.0, 5.0, 10.0])
+    this.rate = new Rate([0.5, 1.0, 2.0, 5.0, 10.0, 30.0, 60.0])
     const imageLoader = new ImageLoader(() => {
       this.client = new Client(this.onmessage.bind(this), 2000)
 
@@ -530,25 +530,25 @@ class Debuging {
     this.debugElement.innerHTML = debugText
   }
   stop_for_dbg(state){
-      if(document.getElementById('offset-scores-box').checked==true && this.offsetScoresCheck(state)){
-        return true
-
+      if(document.getElementById('offset-scores-box').checked){
+        return this.offsetScoresCheck(state)
       }
-      if(document.getElementById('collision-box').checked==true && collisionCheck(state)){
-        return true
+      if(document.getElementById('collision-box').checked){
+        return this.collisionCheck(state)
       }
-      if(document.getElementById('missed-penguin-box').checked==true &&missedPenguin(state)){
-        return true
+      if(document.getElementById('missed-penguin-box').checked){
+        return this.missedPenguin(state)
       }
-      if(document.getElementById('did-obstacle-box').checked==true && didObstacle(state)){
-        return true
+      if(document.getElementById('did-obstacle-box').checked){
+        return this.didObstacle(state)
       }
+      return false
   }
   missedPenguin(state){
   this.players=state.players
   for (const obstacle of state.track) {
     if (obstacle.name=="penguin"){
-        if(obstacle.y==this.players[0].y){
+        if(obstacle.y == this.players[0].y && obstacle.x /3 == this.players[0].line){
         return true
         }
     }
@@ -563,10 +563,11 @@ class Debuging {
     return false
   }
   offsetScoresCheck (state){
-    if ( (player1score - player2score) != this.offset){
-        this.offset = player1score - player2score
-        return true
-      }
+    if (state.players.length == 2){
+      if ( (state.players[0].score - state.players[1].score) != this.offset){
+          this.offset = state.players[0].score - state.players[1].score
+          return true
+        }}
     return false
   }
   didObstacle (state){ /*have runned into obstacle?*/
