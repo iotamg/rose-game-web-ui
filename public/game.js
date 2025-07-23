@@ -512,6 +512,7 @@ class Debuging {
     this.debugElement = document.getElementById('debug-text')
     this.offset = 0
     this.pastScores = [0,0]
+    this.check_box=0;
   }
   
 
@@ -529,7 +530,18 @@ class Debuging {
 
     this.debugElement.innerHTML = debugText
   }
+  check_box(){
+    if(false==getElementById('focus-right-box').checked&&false==getElementById('focus-left-box').checked&&this.check_box==0){
+        getElementById('focus-left-box').checked=true
+        this.check_box=1
+    }
+    else if(false==getElementById('focus-right-box').checked&&false==getElementById('focus-left-box').checked){
+               getElementById('focus-right-box').checked=true
+               this.check_box=0
+    }
+  }
   stop_for_dbg(state){
+      this.check_box()
       if(document.getElementById('offset-scores-box').checked){
         return this.offsetScoresCheck(state)
       }
@@ -548,8 +560,14 @@ class Debuging {
   this.players=state.players
   for (const obstacle of state.track) {
     if (obstacle.name=="penguin"){
-        if(obstacle.y == this.players[0].y && obstacle.x /3 == this.players[0].line){
-        return true
+        if(document.getElementById('focus-right-box').checked && document.getElementById('focus-left-box').checked && (obstacle.y == this.players[0].y && obstacle.y == this.players[1].y)){
+            return true
+        }
+        else if(document.getElementById('focus-right-box').checked && obstacle.y == this.players[1].y && obstacle.x /3 == 1){
+            return true
+        }
+        else if(obstacle.y == this.players[0].y && obstacle.x /3 == 0){
+            return true
         }
     }
   }
@@ -564,21 +582,49 @@ class Debuging {
   }
   offsetScoresCheck (state){
     if (state.players.length == 2){
+     if(document.getElementById('focus-right-box').checked&&document.getElementById('focus-left-box').checked){
       if ( (state.players[0].score - state.players[1].score) != this.offset){
           this.offset = state.players[0].score - state.players[1].score
           return true
-        }}
+        }
+        }
+     else if(document.getElementById('focus-right-box').checked){
+           if ( (state.players[0].score - state.players[1].score) > this.offset){
+               this.offset = state.players[0].score - state.players[1].score
+               return true
+             }
+     }
+     else{
+           if ( (state.players[0].score - state.players[1].score) < this.offset){
+               this.offset = state.players[0].score - state.players[1].score
+               return true
+             }}
+    }
     return false
+  }
+  scoreChenged(state,i){
+          if (this.pastScores[i] - 10 == state.players[i].score){
+            this.pastScores[i] = state.players[i].score
+            return true
+          }
+          this.pastScores[i] = state.players[i].score
   }
   didObstacle (state){ /*have runned into obstacle?*/
     if (document.getElementById('did-obstacle-box').checked){
+    if(document.getElementById('focus-left-box').checked&&document.getElementById('focus-right-box').checked){
       for (let i = 0; i < state.players.length; i++) {
-        if (this.pastScores[i] - 10 == state.players[i].score){
-          this.pastScores[i] = state.players[i].score
-          return true
-        }
-        this.pastScores[i] = state.players[i].score
-      }}
+            if(this.scoreChenged(state,i)){
+                return true
+            }
+      }
+      }
+      else if (document.getElementById('focus-right-box').checked){
+           return this.scoreChenged(state,1)
+      }
+      else{
+        return this.scoreChenged(state,0)
+      }
+      }
       return false
   }
 
