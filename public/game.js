@@ -47,7 +47,6 @@ class App {
     const state = msg.payload
 
     // Update
-    console.log(state)
     this.debugUpdater.update(state)
     if(this.debugUpdater.offsetScoresCheck(state)){
       this.controller.stop()
