@@ -1,6 +1,6 @@
 let player1score = 0
 let player2score = 0
-let autoreset = false
+
 class App {
   client = null
   controller = null
@@ -26,7 +26,7 @@ class App {
       // Finish loading game images.
       document.querySelector('#left.player .name').textContent = ''
     })
-
+    
     this.context = document.querySelector('#game').getContext('2d')
     this.dashboard = new Dashboard()
     this.track = new Track(imageLoader)
@@ -50,7 +50,11 @@ class App {
     const state = msg.payload
 
     // Update
+    
     this.debugUpdater.update(state)
+    if(this.debugUpdater.offsetScoresCheck(state)){
+      this.controller.stop()
+    }
     this.controller.update(state)
     this.rate.update(state)
     this.dashboard.update(state)
@@ -59,6 +63,7 @@ class App {
     this.cars.update(state)
     this.finish_line.update(state)
     this.infoUpdater.update(state)
+    
 
 
     // Draw
@@ -100,16 +105,20 @@ class Client {
 class Controller {
   constructor () {
     this.initializeEvents()
+    this.choseToPlay = false
   }
 
   initializeEvents () {
+    
     document.querySelector('#run').addEventListener('click', event => {
       event.preventDefault()
+      this.choseToPlay = true
       this.run()
     })
 
     document.querySelector('#stop').addEventListener('click', event => {
       event.preventDefault()
+      this.choseToPlay = false
       this.stop()
     })
 
@@ -142,10 +151,12 @@ class Controller {
     })
     document.getElementById('debug-play-btn').addEventListener('click', event => {
       event.preventDefault()
+      this.choseToPlay = true
       this.run()
     })
     document.getElementById('debug-pause-btn').addEventListener('click', event => {
       event.preventDefault()
+      this.choseToPlay = false
       this.stop()
     })
   }
@@ -196,21 +207,26 @@ class Controller {
       document.querySelector('#run').setAttribute('disabled', 'disabled')
       document.querySelector('#stop').removeAttribute('disabled')
       document.querySelector('#reset').setAttribute('disabled', 'disabled')
-
+      
     } else {
       document.querySelector('#info').textContent = ('')
       document.querySelector('#debug').textContent = ('')
       document.querySelector('#run').removeAttribute('disabled')
       document.querySelector('#stop').setAttribute('disabled', 'disabled')
       document.querySelector('#reset').removeAttribute('disabled')
-      if (autoreset){
-      this.reset()
-      }
+      
     }
 
     if (state.timeleft === 0) {
       document.querySelector('#run').setAttribute('disabled', 'disabled')
       this.reset()
+    }
+    if (state.timeleft === 60 && this.choseToPlay) {
+      if(document.getElementById('keep-playing-box').checked){
+          console.log("About to run again")
+          this.run()
+          console.log("run again")
+        }
     }
   }
 
@@ -325,6 +341,7 @@ class Dashboard {
         player2score=player.score
       }
     }
+    if (this.players.length == 1){player1score = player2score}
   }
 }
 
@@ -500,15 +517,15 @@ class Information {
 class Debuging {
   constructor () {
     this.debugElement = document.getElementById('debug-text')
+    this.offset = 0
   }
+  
 
   update (state) {
     if (!state.players) {
       return
     }
-    if(getElementById('aotoReset').checked==true){
-    autreseteset=true
-    }
+    
 
     let debugText = ''
 
@@ -518,17 +535,23 @@ class Debuging {
 
     state.players.forEach(player => {
       const formattedResponseTime = (player.response_time * 1000.0).toFixed(2)
-      debugText += `Name: ${player.name}<br/>`
-      debugText += `Response time: ${formattedResponseTime}ms<br/>`
-      debugText += 'Hello World'
       debugText += player1score
       debugText += document.querySelector('#right.player .score').textContent
       
       debugText += '<br/><br/>'
+      debugText += document.getElementById('offset-scores-box').value
     })
 
     this.debugElement.innerHTML = debugText
   }
+  offsetScoresCheck (state){
+    if (document.getElementById('offset-scores-box').checked==true && (player1score - player2score) != this.offset){
+        this.offset = player1score - player2score
+        return true
+      }
+    return false
+  }
+
 }
 
 class ImageLoader {
