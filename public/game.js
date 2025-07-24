@@ -48,7 +48,7 @@ class App {
 
     // Update
     this.debugUpdater.update(state)
-    if(this.debugUpdater.stop_for_dbg(state)){
+    if(this.debugUpdater.debugStop(state)){
       this.controller.stop()
     }
     this.controller.update(state)
@@ -530,105 +530,57 @@ class Debuging {
 
     this.debugElement.innerHTML = debugText
   }
-  check_box(){
-    if(false==getElementById('focus-right-box').checked&&false==getElementById('focus-left-box').checked&&this.check_box==0){
-        getElementById('focus-left-box').checked=true
-        this.check_box=1
-    }
-    else if(false==getElementById('focus-right-box').checked&&false==getElementById('focus-left-box').checked){
-               getElementById('focus-right-box').checked=true
-               this.check_box=0
-    }
-  }
-  stop_for_dbg(state){
-      this.check_box()
+
+  debugStop(state){
       if(document.getElementById('offset-scores-box').checked){
         return this.offsetScoresCheck(state)
-      }
-      if(document.getElementById('collision-box').checked){
-        return this.collisionCheck(state)
       }
       if(document.getElementById('missed-penguin-box').checked){
         return this.missedPenguin(state)
       }
-      if(document.getElementById('did-obstacle-box').checked){
-        return this.didObstacle(state)
-      }
-      return false
-  }
-  missedPenguin(state){
-  this.players=state.players
-  for (const obstacle of state.track) {
-    if (obstacle.name=="penguin"){
-        if(document.getElementById('focus-right-box').checked && document.getElementById('focus-left-box').checked && (obstacle.y == this.players[0].y && obstacle.y == this.players[1].y)){
-            return true
-        }
-        else if(document.getElementById('focus-right-box').checked && obstacle.y == this.players[1].y && obstacle.x /3 == 1){
-            return true
-        }
-        else if(obstacle.y == this.players[0].y && obstacle.x /3 == 0){
-            return true
-        }
-    }
-  }
-  return false
-  }
-  collisionCheck(state){
-    this.players=state.players
-    if(this.players[0].x==this.players[1].x && this.players[0].y==this.players[1].y){
-    return true
-    }
-    return false
-  }
-  offsetScoresCheck (state){
-    if (state.players.length == 2){
-     if(document.getElementById('focus-right-box').checked&&document.getElementById('focus-left-box').checked){
-      if ( (state.players[0].score - state.players[1].score) != this.offset){
-          this.offset = state.players[0].score - state.players[1].score
-          return true
-        }
-        }
-     else if(document.getElementById('focus-right-box').checked){
-           if ( (state.players[0].score - state.players[1].score) > this.offset){
-               this.offset = state.players[0].score - state.players[1].score
-               return true
-             }
-     }
-     else{
-           if ( (state.players[0].score - state.players[1].score) < this.offset){
-               this.offset = state.players[0].score - state.players[1].score
-               return true
-             }}
-    }
-    return false
-  }
-  scoreChenged(state,i){
-          if (this.pastScores[i] - 10 == state.players[i].score){
-            this.pastScores[i] = state.players[i].score
-            return true
-          }
-          this.pastScores[i] = state.players[i].score
-  }
-  didObstacle (state){ /*have runned into obstacle?*/
-    if (document.getElementById('did-obstacle-box').checked){
-    if(document.getElementById('focus-left-box').checked&&document.getElementById('focus-right-box').checked){
-      for (let i = 0; i < state.players.length; i++) {
-            if(this.scoreChenged(state,i)){
-                return true
-            }
-      }
-      }
-      else if (document.getElementById('focus-right-box').checked){
-           return this.scoreChenged(state,1)
-      }
-      else{
-        return this.scoreChenged(state,0)
-      }
+      if(document.getElementById('crash-box').checked){
+        return this.crashed(state)
       }
       return false
   }
 
-}
+  missedPenguin(state){
+    for (const obstacle of state.track) {
+      if (obstacle.name=="penguin"){
+        if(obstacle.x / 3 < 1 && document.getElementById('focus-left-box').checked && (obstacle.y == state.players[0].y)){
+            return true
+        }
+        if(obstacle.x / 3 >= 1 && document.getElementById('focus-right-box').checked && (obstacle.y == state.players[1].y)){
+            return true
+        }
+      }
+    }
+    return false
+    }
+
+  offsetScoresCheck (state){
+    if (state.players.length == 2){
+      if ((state.players[0].score - state.players[1].score) != this.offset){
+          this.offset = state.players[0].score - state.players[1].score
+          return true
+        }
+      this.offset = state.players[0].score - state.players[1].score
+      }
+    return false
+    }
+  crashed (state){ /*have runned into obstacle?*/
+    if (document.getElementById('crash-box').checked){
+      this.min = document.getElementById('focus-left-box').checked ? 0 : 1 //setting boundries to the for loop
+      this.max = document.getElementById('focus-right-box').checked ? 2 : 1
+      for (this.min; this.min < this.max; this.min++) {
+        if (this.pastScores[this.min] - 10 == state.players[this.min].score){
+          this.pastScores[this.min] = state.players[this.min].score
+          return true
+        }
+        this.pastScores[this.min] = state.players[this.min].score
+      }}
+      return false
+  }}
 
 class ImageLoader {
   constructor (done) {
